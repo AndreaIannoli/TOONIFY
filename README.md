@@ -12,11 +12,9 @@
   </a>
 </p>
 
-# TOONIFY
-
 Universal converter for JSON, YAML, XML, and CSV into the [TOON](https://github.com/toon-format/spec/blob/main/SPEC.md) format with multi-language bindings.
 
-## What’s Included
+## What’s Included 🚀
 
 - **Rust core library** (`toonify-core`) that normalizes the supported formats into TOON while following the spec’s quoting, delimiter, and key-folding rules.
 - **First-class decoder/validator** APIs (`decode_str`, `validate_str`) that round-trip TOON into JSON and enforce strict-mode semantics (array counts, indentation, path-expansion conflicts, etc.).
@@ -44,7 +42,7 @@ TOON decoding/validation options mirror the spec:
 | `loose` / `strict` | Disable (`loose`) or enable (`strict`, default) array count and indentation validation |
 | `pretty` | When decoding, pretty-print JSON output |
 
-## Install the CLI globally
+## Install the CLI globally 🧰
 
 You can make the `toonify-cli` binary available on your `PATH` without referencing `target/release`:
 
@@ -58,7 +56,7 @@ cargo install --locked --path crates/toonify-cli
 
 `cargo install` drops binaries into `~/.cargo/bin`, so make sure that directory is on your `PATH`. Afterwards you can run commands such as `toonify-cli --input data.json --format json` from anywhere.
 
-## Getting Started
+## Getting Started ⚙️
 
 ```bash
 # Build the CLI (requires Rust 1.76+)
@@ -68,7 +66,7 @@ cargo build --release -p toonify-cli
 ./target/release/toonify-cli --input fixtures/data.json --format json --key-folding safe
 ```
 
-### CLI Quick Reference
+### CLI Quick Reference 💡
 
 ```
 toonify-cli --input users.yaml --format yaml --delimiter tab --key-folding safe --flatten-depth 3
@@ -85,7 +83,7 @@ toonify-cli --mode validate --input users.toon
 
 Run `toonify-cli --help` to view every flag.
 
-### Node.js Package
+### Node.js Package 🧩
 
 ```bash
 cd bindings/node
@@ -107,7 +105,7 @@ console.log(json);
 
 Publish by running `npm pack` (after `npm run build -- --release`) and pushing to your registry of choice.
 
-### Python Package
+### Python Package 🐍
 
 ```bash
 cd bindings/python
@@ -132,7 +130,7 @@ validate_toon(toon_doc)
 
 Ship wheels via `maturin build --release` and upload them with `twine`.
 
-### Docker Image
+### Docker Image 🐳
 
 ```bash
 docker build -t toonify .
@@ -141,13 +139,14 @@ docker run --rm -v $PWD:/data toonify --input /data/users.json --format json
 
 Set `ENTRYPOINT` to `toonify`, so passing CLI flags works naturally.
 
-## Testing
+## Testing ✅
 
-- (Optional) run integration tests inside the CLI crate or bindings.
+- `cargo test` (workspace) — runs the Rust core + CLI + bindings integration suites.
+- `docker build -t toonify .` — ensures the container image compiles after any change.
 
-> **Note:** This repository does not ship a `Cargo.lock` yet; run `cargo generate-lockfile` before reproducible builds.
+> **Note:** The repo now includes `Cargo.lock`; update it with `cargo update` when dependency bumps are intentional.
 
-## Roadmap / Ideas
+## Roadmap / Ideas 💭
 
 - Expand the decoder to support more formats (CSV, YAML, etc.)
 - Add a token saving estimation mechanism
