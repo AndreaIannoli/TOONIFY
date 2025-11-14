@@ -1,0 +1,18 @@
+{
+  "items": [
+    {
+      "user": {
+        "name": "Ada",
+        "email": "ada@example.com"
+      },
+      "role": "admin"
+    },
+    {
+      "user": {
+        "name": "Grace",
+        "email": "grace@example.com"
+      },
+      "role": "editor"
+    }
+  ]
+}

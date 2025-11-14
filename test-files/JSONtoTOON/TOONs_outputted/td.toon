@@ -1,0 +1,27 @@
+"@context"[1]: "https://www.w3.org/2022/wot/td/v1.1"
+title: TemperatureSensor
+id: "urn:dev:wot:example:temp-sensor-1234"
+security[1]: nosec_sc
+securityDefinitions.nosec_sc.scheme: nosec
+properties.temperature:
+  title: Temperature
+  type: number
+  description: Current temperature in Celsius
+  readOnly: true
+  forms[1]:
+    - href: "https://example.com/sensor/temperature"
+      contentType: application/json
+      op[1]: readproperty
+actions.reset:
+  description: Reset the sensor
+  forms[1]:
+    - href: "https://example.com/sensor/reset"
+      op[1]: invokeaction
+      contentType: application/json
+events.overheat:
+  description: Triggered when temperature is above threshold
+  data.type: number
+  forms[1]:
+    - href: "https://example.com/sensor/overheat"
+      subprotocol: longpoll
+      op[2]: subscribeevent,unsubscribeevent

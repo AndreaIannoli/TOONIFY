@@ -1,0 +1,56 @@
+{
+    "@context": ["https://www.w3.org/2022/wot/td/v1.1"],
+    "title": "TemperatureSensor",
+    "id": "urn:dev:wot:example:temp-sensor-1234",
+    "security": ["nosec_sc"],
+    "securityDefinitions": {
+        "nosec_sc": {
+            "scheme": "nosec"
+        }
+    },
+
+    "properties": {
+        "temperature": {
+            "title": "Temperature",
+            "type": "number",
+            "description": "Current temperature in Celsius",
+            "readOnly": true,
+            "forms": [
+                {
+                    "href": "https://example.com/sensor/temperature",
+                    "contentType": "application/json",
+                    "op": ["readproperty"]
+                }
+            ]
+        }
+    },
+
+    "actions": {
+        "reset": {
+            "description": "Reset the sensor",
+            "forms": [
+                {
+                    "href": "https://example.com/sensor/reset",
+                    "op": ["invokeaction"],
+                    "contentType": "application/json"
+                }
+            ]
+        }
+    },
+
+    "events": {
+        "overheat": {
+            "description": "Triggered when temperature is above threshold",
+            "data": {
+                "type": "number"
+            },
+            "forms": [
+                {
+                    "href": "https://example.com/sensor/overheat",
+                    "subprotocol": "longpoll",
+                    "op": ["subscribeevent", "unsubscribeevent"]
+                }
+            ]
+        }
+    }
+}

@@ -1,0 +1,23 @@
+{
+  "name": "@toonify/node",
+  "version": "0.1.0",
+  "description": "Node.js bindings for the TOON converter",
+  "main": "index.js",
+  "types": "index.d.ts",
+  "scripts": {
+    "build": "napi build --platform",
+    "test": "node -e \"console.log(require('./index.js').version())\""
+  },
+  "files": [
+    "index.js",
+    "index.d.ts",
+    "npm"
+  ],
+  "devDependencies": {
+    "@napi-rs/cli": "^2.18.0"
+  },
+  "license": "MIT",
+  "engines": {
+    "node": ">=16"
+  }
+}

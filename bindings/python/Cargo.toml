@@ -1,0 +1,19 @@
+[package]
+name = "toonify-python"
+version = "0.1.0"
+edition = "2021"
+authors = ["Toonify Contributors"]
+description = "Python bindings for the TOON converter"
+license = "MIT"
+
+[lib]
+name = "toonify_python"
+crate-type = ["cdylib"]
+
+[dependencies]
+pyo3 = { version = "0.21", features = ["extension-module"] }
+serde_json = { workspace = true }
+toonify-core = { path = "../../crates/toonify-core" }
+
+[package.metadata.maturin]
+name = "toonify"

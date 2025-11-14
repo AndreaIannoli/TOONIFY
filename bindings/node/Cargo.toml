@@ -1,0 +1,19 @@
+[package]
+name = "toonify-node"
+version = "0.1.0"
+edition = "2021"
+authors = ["Toonify Contributors"]
+description = "Node.js bindings for the TOON converter"
+license = "MIT"
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+napi = { version = "2.16", features = ["napi5"] }
+napi-derive = "2.16"
+serde_json = { workspace = true }
+toonify-core = { path = "../../crates/toonify-core" }
+
+[build-dependencies]
+napi-build = "2.0"

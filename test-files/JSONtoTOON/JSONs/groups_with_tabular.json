@@ -1,0 +1,11 @@
+{
+  "groups": [
+    {
+      "members": [
+        { "id": 1, "name": "Ada" },
+        { "id": 2, "name": "Bob" }
+      ],
+      "status": "active"
+    }
+  ]
+}

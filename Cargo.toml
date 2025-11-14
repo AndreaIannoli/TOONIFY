@@ -1,0 +1,21 @@
+[workspace]
+members = [
+  "crates/toonify-core",
+  "crates/toonify-cli",
+  "bindings/node",
+  "bindings/python"
+]
+resolver = "2"
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+license = "MIT"
+authors = ["Toonify Contributors"]
+
+[workspace.dependencies]
+anyhow = "1.0"
+thiserror = "1.0"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = { version = "1.0", features = ["preserve_order"] }
+indexmap = "2.2"
