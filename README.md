@@ -154,6 +154,5 @@ Set `ENTRYPOINT` to `toonify`, so passing CLI flags works naturally.
 ## Roadmap / Ideas 💭
 
 - Expand the decoder to support more formats (CSV, YAML, etc.)
-- Add additional token saving estimation mechanisms (custom tokenizers, streaming mode)
 
 Contributions are welcome—feel free to open issues or PRs with improvements!
