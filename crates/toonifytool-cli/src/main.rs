@@ -1,13 +1,13 @@
 use std::fs;
-use std::io::{self, Read};
+use std::io::{self, Read, Write};
 use std::path::{Path, PathBuf};
 
 use anyhow::{Context, Result};
 use clap::{ArgAction, CommandFactory, Parser, ValueEnum};
 use serde_json;
 use toonify_core::{
-    convert_str, decode_str, validate_str, DecoderOptions, Delimiter, EncoderOptions,
-    KeyFoldingMode, PathExpansionMode, SourceFormat,
+    DecoderOptions, Delimiter, EncoderOptions, KeyFoldingMode, PathExpansionMode, SourceFormat,
+    TokenModel, convert_str, count_tokens, decode_str, validate_str,
 };
 
 const LOGO: &str = r#"┌────────────────────────────┐
@@ -71,6 +71,14 @@ struct Cli {
     /// Pretty-print JSON when decoding.
     #[arg(long, action = ArgAction::SetTrue)]
     pretty_json: bool,
+
+    /// Tokenizer to estimate LLM token savings after encoding.
+    #[arg(long = "token-model", value_enum, default_value_t = TokenModelArg::Cl100k)]
+    token_model: TokenModelArg,
+
+    /// Emit a token savings report after encoding.
+    #[arg(long = "token-report", action = ArgAction::SetTrue)]
+    token_report: bool,
 }
 
 fn main() -> Result<()> {
@@ -97,6 +105,9 @@ fn main() -> Result<()> {
             let toon =
                 convert_str(&input, format, cli.build_options()).context("conversion failed")?;
             cli.emit(&toon)?;
+            if cli.token_report {
+                cli.report_token_savings(&input, &toon);
+            }
         }
         ModeArg::Decode => {
             let value = decode_str(&input, cli.build_decoder_options()).context("decode failed")?;
@@ -146,6 +157,27 @@ impl Cli {
             indent: self.decoder_indent,
             strict: !self.loose,
             expand_paths: self.expand_paths.to_core(),
+        }
+    }
+
+    fn report_token_savings(&self, original: &str, toon: &str) {
+        let model = self.token_model.to_core();
+        let _ = io::stdout().flush();
+        match (count_tokens(original, model), count_tokens(toon, model)) {
+            (Ok(orig), Ok(toon_tokens)) => {
+                let saved = orig.saturating_sub(toon_tokens);
+                let percent = if orig == 0 {
+                    0.0
+                } else {
+                    (saved as f64 / orig as f64) * 100.0
+                };
+                eprintln!(
+                    "\n\n\n🧮 Token report ({model}): source {orig} vs TOON {toon_tokens}, saved {saved} ({percent:.1}%)."
+                );
+            }
+            (Err(err), _) | (_, Err(err)) => {
+                eprintln!("warning: unable to compute token savings: {err}");
+            }
         }
     }
 
@@ -217,6 +249,30 @@ enum ModeArg {
 enum PathExpandArg {
     Off,
     Safe,
+}
+
+#[derive(Copy, Clone, Debug, Eq, PartialEq, ValueEnum)]
+enum TokenModelArg {
+    Cl100k,
+    O200k,
+}
+
+impl std::fmt::Display for TokenModelArg {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            TokenModelArg::Cl100k => write!(f, "cl100k_base"),
+            TokenModelArg::O200k => write!(f, "o200k_base"),
+        }
+    }
+}
+
+impl TokenModelArg {
+    fn to_core(self) -> TokenModel {
+        match self {
+            TokenModelArg::Cl100k => TokenModel::Cl100k,
+            TokenModelArg::O200k => TokenModel::O200k,
+        }
+    }
 }
 
 impl PathExpandArg {

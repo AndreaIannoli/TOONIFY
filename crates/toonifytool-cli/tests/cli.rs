@@ -8,7 +8,7 @@ fn fixtures_root() -> PathBuf {
 }
 
 fn cli_cmd() -> Command {
-    Command::new(assert_cmd::cargo::cargo_bin!("toonify-cli"))
+    Command::new(assert_cmd::cargo::cargo_bin!("toonify"))
 }
 
 #[test]
