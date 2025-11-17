@@ -18,7 +18,7 @@ Universal converter for JSON, YAML, XML, and CSV into the [TOON](https://github.
 
 - **Rust core library** (`toonify-core`) that normalizes the supported formats into TOON while following the spec’s quoting, delimiter, and key-folding rules.
 - **First-class decoder/validator** APIs (`decode_str`, `validate_str`) that round-trip TOON into JSON and enforce strict-mode semantics (array counts, indentation, path-expansion conflicts, etc.).
-- **CLI** (`toonify-cli`) for one-shot conversions, TOON → JSON decoding, or standalone validation.
+- **CLI** ([`toonifytool-cli`](https://crates.io/crates/toonifytool-cli)) for one-shot conversions, TOON → JSON decoding, or standalone validation; add `--token-report` for opt-in savings stats.
 - **Node.js bindings** (`bindings/node`, powered by `napi-rs`) that expose encode/decode/validate helpers to JavaScript/TypeScript.
 - **Python bindings** (`bindings/python`, powered by PyO3 + maturin) with the same surface area.
 - **Docker image** for CI/automation scenarios where you just want a containerized CLI.
@@ -42,46 +42,51 @@ TOON decoding/validation options mirror the spec:
 | `loose` / `strict` | Disable (`loose`) or enable (`strict`, default) array count and indentation validation |
 | `pretty` | When decoding, pretty-print JSON output |
 
+### Distribution 🧾
+
+- 📦 crates.io: [`toonifytool-cli`](https://crates.io/crates/toonifytool-cli)
+- 🐳 Docker Hub: [`andreaiannoli/toonify`](https://hub.docker.com/r/andreaiannoli/toonify)
+
 ## Install the CLI globally 🧰
 
-You can make the `toonify-cli` binary available on your `PATH` without referencing `target/release`:
+You can make the `toonify` binary available on your `PATH` without referencing `target/release`:
 
 ```bash
 # build and install the local workspace binary
-cargo install --locked --path crates/toonify-cli
-
-# once published on crates.io you can also do:
-# cargo install --locked toonify-cli
+cargo install --locked toonifytool-cli
 ```
 
-`cargo install` drops binaries into `~/.cargo/bin`, so make sure that directory is on your `PATH`. Afterwards you can run commands such as `toonify-cli --input data.json --format json` from anywhere.
+`cargo install` drops binaries into `~/.cargo/bin`, so make sure that directory is on your `PATH`. Afterwards you can run commands such as `toonify --input data.json --format json` from anywhere.
 
 ## Getting Started ⚙️
 
 ```bash
 # Build the CLI (requires Rust 1.76+)
-cargo build --release -p toonify-cli
+cargo build --release -p toonifytool-cli
 
 # Convert a JSON file
-./target/release/toonify-cli --input fixtures/data.json --format json --key-folding safe
+./target/release/toonify --input fixtures/data.json --format json --key-folding safe
 ```
 
 ### CLI Quick Reference 💡
 
 ```
-toonify-cli --input users.yaml --format yaml --delimiter tab --key-folding safe --flatten-depth 3
+toonify --input users.yaml --format yaml --delimiter tab --key-folding safe --flatten-depth 3
 
 # STDIN → STDOUT
-curl https://example.com/users.csv | toonify-cli --format csv
+curl https://example.com/users.csv | toonify --format csv
 
 # Decode TOON → JSON
-toonify-cli --mode decode --input users.toon --pretty-json
+toonify --mode decode --input users.toon --pretty-json
 
 # Validate a TOON document (strict-mode by default)
-toonify-cli --mode validate --input users.toon
+toonify --mode validate --input users.toon
+
+# Compare token models for savings (default cl100k_base)
+toonify --input users.yaml --format yaml --token-model o200k
 ```
 
-Run `toonify-cli --help` to view every flag.
+Run `toonify --help` to view every flag. When you include `--token-report`, the CLI prints a token report using the selected model (default `cl100k_base`, switch via `--token-model o200k` when targeting GPT-4o-style models).
 
 ### Node.js Package 🧩
 
@@ -149,6 +154,6 @@ Set `ENTRYPOINT` to `toonify`, so passing CLI flags works naturally.
 ## Roadmap / Ideas 💭
 
 - Expand the decoder to support more formats (CSV, YAML, etc.)
-- Add a token saving estimation mechanism
+- Add additional token saving estimation mechanisms (custom tokenizers, streaming mode)
 
 Contributions are welcome—feel free to open issues or PRs with improvements!

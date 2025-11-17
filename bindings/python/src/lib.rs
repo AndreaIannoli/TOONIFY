@@ -1,8 +1,10 @@
+#![allow(unsafe_op_in_unsafe_fn)]
+
 use pyo3::{exceptions::PyValueError, prelude::*};
 use serde_json;
 use toonify_core::{
-    convert_str, decode_str, validate_str, DecoderOptions, Delimiter, EncoderOptions,
-    KeyFoldingMode, PathExpansionMode, SourceFormat,
+    DecoderOptions, Delimiter, EncoderOptions, KeyFoldingMode, PathExpansionMode, SourceFormat,
+    convert_str, decode_str, validate_str,
 };
 
 #[pyfunction]

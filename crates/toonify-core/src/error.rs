@@ -24,6 +24,8 @@ pub enum ToonifyError {
     Encoding(String),
     #[error("{0}")]
     Decoding(String),
+    #[error("tokenization error: {0}")]
+    Tokenizer(String),
 }
 
 impl ToonifyError {
@@ -43,5 +45,9 @@ impl ToonifyError {
 
     pub(crate) fn decoding(msg: impl fmt::Display) -> Self {
         Self::Decoding(msg.to_string())
+    }
+
+    pub(crate) fn tokenizer(msg: impl fmt::Display) -> Self {
+        Self::Tokenizer(msg.to_string())
     }
 }
